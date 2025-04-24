@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}About Us - Sweetie's Bites Bakery{% endblock %}
+
+{% block body %}
+<div class="about-section">
+    <h1>About Sweetie's Bites Bakery</h1>
+    
+    {# Section avec image et texte côte à côte #}
+    <div class="about-content">
+        <div class="about-image">
+            <img src="{{ asset('images/uploads/products/logo.png') }}" alt="Our Bakery" class="bakery-image">
+        </div>
+        <div class="about-text">
+            <p>Welcome to our bakery! We've been serving delicious treats since 2020.</p>
+            <p>Our mission is to bring joy through our handcrafted pastries and desserts.</p>
+        </div>
+    </div>
+    
+    <h2>Our Team</h2>
+    <div class="team-members">
+        <div class="member">
+            <h3>Raach Nour</h3>
+            <p>Head Pastry Chef</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .about-section {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+        color: rgb(137, 71, 131);
+        font-family: 'Playfair Display', serif;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .about-content {
+        display: flex;
+        gap: 30px;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    
+    .about-image {
+        flex: 1;
+    }
+    
+    .about-text {
+        flex: 1;
+    }
+    
+    .bakery-image {
+        width: 100%;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .team-members {
+        display: flex;
+        gap: 20px;
+        margin-top: 30px;
+    }
+    
+    .member {
+        flex: 1;
+        padding: 15px;
+        background: #f9f9f9;
+        border-radius: 5px;
+        text-align: center;
+    }
+</style>
+{% endblock %}

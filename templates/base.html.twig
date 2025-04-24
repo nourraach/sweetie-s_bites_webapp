@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+        
+        <!-- Add modern CSS reset -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/2.0.0/modern-normalize.min.css">
+        
+        {% block stylesheets %}
+        <style>
+            /* Base styles */
+            body {
+                background-color: #ffffff;
+                font-family: 'Poppins', sans-serif;
+                color: #333;
+                line-height: 1.6;
+                margin: 0;
+                padding: 0;
+            }
+            
+            /* Main content container */
+            .main-container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+        .navbar {
+                background-color:rgb(137, 71, 131);
+                padding: 1rem 2rem;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            
+            .navbar-brand {
+                color: white;
+                font-weight: 600;
+                font-size: 1.5rem;
+                text-decoration: none;
+            }
+            
+            .navbar-nav {
+                display: flex;
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+            
+            .nav-item {
+                margin-left: 1.5rem;
+            }
+            
+            .nav-link {
+                color: rgba(255, 255, 255, 0.8);
+                text-decoration: none;
+                transition: color 0.3s;
+                font-weight: 500;
+            }
+            
+            .nav-link:hover {
+                color: white;
+            }
+        </style>
+        {% endblock %}
+
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
+    </head>
+    <body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="{{ path('app_produit_index') }}" class="navbar-brand">Sweetie's Bites Bakery 🍪</a>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="{{ path('app_produit_index') }}" class="nav-link">Products</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ path('app_produit_new') }}" class="nav-link">Add Product</a>
+                </li>
+                <li class="nav-item">
+                <a href="{{ path('app_about') }}" class="nav-link">About</a>
+            </li>
+            
+            </ul>
+        </div>
+    </nav>
+        <div class="main-container">
+            {% block body %}{% endblock %}
+        </div>
+    </body>
+</html>
