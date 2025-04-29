@@ -4,87 +4,120 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: '`user`')]
-class User {
-    #[ORM\Id, ORM\GeneratedValue, ORM\Column(type: 'integer')]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $login;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $motdepasse;
+    #[ORM\Column(length: 180)]
+    private ?string $email = null;
 
     /**
-     * Get the value of id
-     *
-     * @return ?int
+     * @var list<string> The user roles
      */
+    #[ORM\Column]
+    private array $roles = [];
+
+    /**
+     * @var string The hashed password
+     */
+    #[ORM\Column]
+    private ?string $password = null;
+
+    #[ORM\Column]
+    private bool $isVerified = false;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * Set the value of id
-     *
-     * @param ?int $id
-     *
-     * @return self
-     */
-    public function setId(?int $id): self
+    public function getEmail(): ?string
     {
-        $this->id = $id;
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
 
         return $this;
     }
 
     /**
-     * Get the value of login
+     * A visual identifier that represents this user.
      *
-     * @return string
+     * @see UserInterface
      */
-    public function getLogin(): string
+    public function getUserIdentifier(): string
     {
-        return $this->login;
+        return (string) $this->email;
     }
 
     /**
-     * Set the value of login
-     *
-     * @param string $login
-     *
-     * @return self
+     * @see UserInterface
+     * @return list<string>
      */
-    public function setLogin(string $login): self
+    public function getRoles(): array
     {
-        $this->login = $login;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    /**
+     * @param list<string> $roles
+     */
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
 
         return $this;
     }
 
     /**
-     * Get the value of motdepasse
-     *
-     * @return string
+     * @see PasswordAuthenticatedUserInterface
      */
-    public function getMotdepasse(): string
+    public function getPassword(): ?string
     {
-        return $this->motdepasse;
+        return $this->password;
+    }
+
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+
+        return $this;
     }
 
     /**
-     * Set the value of motdepasse
-     *
-     * @param string $motdepasse
-     *
-     * @return self
+     * @see UserInterface
      */
-    public function setMotdepasse(string $motdepasse): self
+    public function eraseCredentials(): void
     {
-        $this->motdepasse = $motdepasse;
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }
