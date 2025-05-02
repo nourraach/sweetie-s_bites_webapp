@@ -58,3 +58,7 @@ when@test:
             entity:
                 class: App\Entity\User
                 property: login  # <-- Match your field name
+    access_control:
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/register, roles: PUBLIC_ACCESS }

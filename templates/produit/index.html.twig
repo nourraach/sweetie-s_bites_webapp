@@ -117,7 +117,7 @@
 
         .product-price {
             font-size: 1.2rem;
-            color: #e74c3c;
+            color:rgba(165, 3, 125, 0.64);
             font-weight: 700;
             margin-bottom: 12px;
         }
@@ -183,11 +183,12 @@
                     
                     <div class="product-info">
                         <h3 class="product-title">{{ produit.nomProduit }}</h3>
-                        <div class="product-price">{{ produit.prix|number_format(2, '.', ',') }} €</div>
+                        <div class="product-price">{{ produit.prix|number_format(2, '.', ',') }} dt</div>
                         
                         <div class="product-actions">
                             <a href="{{ path('app_produit_show', {'id': produit.id}) }}">Details</a>
                             <a href="{{ path('app_produit_edit', {'id': produit.id}) }}">Edit</a>
+                            <a href="{{ path('app_cart_add', {'id': produit.id}) }}" class="btn btn-success">Add to Cart</a>
                         </div>
                     </div>
                 </div>

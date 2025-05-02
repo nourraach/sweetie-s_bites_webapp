@@ -1,0 +1,243 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Your Shopping Cart{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .cart-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: #fff9fb;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.1);
+            border: 1px solid #ffe6f2;
+        }
+        
+        h1 {
+            color: #9c27b0;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(156, 39, 176, 0.1);
+        }
+        
+        .table {
+            width: 100%;
+            margin-bottom: 30px;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 15px rgba(156, 39, 176, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .table th {
+    background: linear-gradient(to bottom, #ffcdd2, #f8bbd0);
+    color: #ad1457;
+    position: relative;
+}
+.table th:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: rgba(255,255,255,0.2);
+}
+        
+        .table td {
+            padding: 15px;
+            border-bottom: 1px solid #ffe6f2;
+            vertical-align: middle;
+        }
+        
+        .table tbody tr:hover {
+            background-color: rgba(233, 30, 99, 0.03);
+        }
+        
+        .table tfoot {
+            font-weight: bold;
+            background-color: #fff0f5;
+        }
+        
+        .btn {
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 3px;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.875rem;
+            border-radius: 20px;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #ffcdd2, #f8bbd0);
+            color: white;
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #ffcdd2, #f8bbd0);
+            color: #6a1b9a;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ffcdd2, #f8bbd0);
+            color: white;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #ffcdd2, #f8bbd0);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            opacity: 0.95;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 600px;
+            margin: 30px auto;
+            background-color: #fce4ec;
+            border: 1px solid #f8bbd0;
+            color: #9c27b0;
+        }
+        
+        .alert a {
+            color: #e91e63;
+            font-weight: 500;
+            text-decoration: underline;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .cart-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .cart-actions a {
+            flex: 1;
+            min-width: 180px;
+            text-align: center;
+            padding: 12px;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .table thead {
+                display: none;
+            }
+            
+            .table tr {
+                display: block;
+                margin-bottom: 25px;
+                border: 1px solid #f8bbd0;
+                border-radius: 10px;
+                background-color: #fff9fb;
+            }
+            
+            .table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid #f8bbd0;
+            }
+            
+            .table td::before {
+                content: attr(data-label);
+                font-weight: bold;
+                color: #9c27b0;
+                margin-right: 15px;
+            }
+            
+            .action-buttons {
+                justify-content: center;
+            }
+            
+            .cart-actions {
+                flex-direction: column;
+            }
+            
+            .cart-actions a {
+                width: 100%;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="cart-container">
+        <h1>Your Shopping Cart 💖</h1>
+        
+        {% if items|length > 0 %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                            <tr>
+                                <td data-label="Product">{{ item.produit.nomProduit }}</td>
+                                <td data-label="Price">{{ item.produit.prix }} dt</td>
+                                <td data-label="Quantity">{{ item.quantity }}</td>
+                                <td data-label="Total">{{ (item.produit.prix * item.quantity) }} dt</td>
+                                <td data-label="Actions">
+                                    <div class="action-buttons">
+                                        <a href="{{ path('app_cart_increase', {'id': item.produit.id}) }}" class="btn btn-sm btn-success">+ Add</a>
+                                        <a href="{{ path('app_cart_decrease', {'id': item.produit.id}) }}" class="btn btn-sm btn-warning">- Reduce</a>
+                                        <a href="{{ path('app_cart_remove', {'id': item.produit.id}) }}" class="btn btn-sm btn-danger">Remove</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-right"><strong>Total:</strong></td>
+                            <td colspan="2" style="color: #e91e63; font-size: 1.1em;">{{ total }} dt</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            
+            <div class="cart-actions">
+                <a href="{{ path('app_cart_clear') }}" class="btn btn-danger">🛑 Clear Cart</a>
+                <a href="{{ path('app_produit_index') }}" class="btn btn-primary">🛍️ Continue Shopping</a>
+                <a href="#" class="btn btn-success">💜 Checkout</a>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                ✨ Your cart is empty! ✨<br>
+                <a href="{{ path('app_produit_index') }}">Start shopping now</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

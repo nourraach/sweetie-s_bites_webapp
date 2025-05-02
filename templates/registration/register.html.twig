@@ -2,22 +2,171 @@
 
 {% block title %}Register{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .registration-container {
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #fff9fb;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.1);
+            border: 1px solid #ffe6f2;
+        }
+
+        h1 {
+            color: #9c27b0;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(156, 39, 176, 0.1);
+        }
+
+        .alert-danger {
+            background-color: #fce4ec;
+            border-color: #f8bbd0;
+            color: #e91e63;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #9c27b0;
+            font-weight: 500;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #f8bbd0;
+            border-radius: 25px;
+            background-color: white;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border-color: #e91e63;
+            box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.2);
+            outline: none;
+        }
+
+        .form-check {
+            margin: 25px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-check-input {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+            accent-color: #e91e63;
+        }
+
+        .form-check-label {
+            color: #6a1b9a;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #ff6ec4, #e91e63);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(233, 30, 99, 0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(233, 30, 99, 0.2);
+            background: linear-gradient(135deg, #e91e63, #ff6ec4);
+        }
+
+        /* Form error styling */
+        .invalid-feedback {
+            color: #e91e63;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        .is-invalid {
+            border-color: #e91e63 !important;
+        }
+
+        /* Link styling */
+        a {
+            color: #e91e63;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 576px) {
+            .registration-container {
+                margin: 20px;
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
+    <div class="registration-container">
+        {% for flash_error in app.flashes('verify_email_error') %}
+            <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+        {% endfor %}
 
-    <h1>Register</h1>
+        <h1>Create Your Account 💜</h1>
 
-    {{ form_errors(registrationForm) }}
+        {{ form_start(registrationForm, { 'attr': {'class': 'form'} }) }}
+            <div class="form-group">
+                {{ form_label(registrationForm.email) }}
+                {{ form_widget(registrationForm.email, { 'attr': {'class': 'form-control'} }) }}
+                {{ form_errors(registrationForm.email) }}
+            </div>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+            <div class="form-group">
+                {{ form_label(registrationForm.plainPassword) }}
+                {{ form_widget(registrationForm.plainPassword, { 'attr': {'class': 'form-control'} }) }}
+                {{ form_errors(registrationForm.plainPassword) }}
+            </div>
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+            <div class="form-check">
+                {{ form_widget(registrationForm.agreeTerms, { 'attr': {'class': 'form-check-input'} }) }}
+                {{ form_label(registrationForm.agreeTerms, null, { 'label_attr': {'class': 'form-check-label'} }) }}
+                {{ form_errors(registrationForm.agreeTerms) }}
+            </div>
+
+            <button type="submit" class="btn">Register Now</button>
+            
+            <p style="text-align: center; margin-top: 20px; color: #6a1b9a;">
+                Already have an account? <a href="{{ path('app_login') }}">Sign in</a>
+            </p>
+        {{ form_end(registrationForm) }}
+    </div>
 {% endblock %}

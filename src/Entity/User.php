@@ -121,4 +121,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+    public function __construct()
+    {
+        $this->roles = ['ROLE_USER']; // Default role for all new users
+    }
 }
