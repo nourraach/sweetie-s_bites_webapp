@@ -231,7 +231,7 @@
             <div class="cart-actions">
                 <a href="{{ path('app_cart_clear') }}" class="btn btn-danger">🛑 Clear Cart</a>
                 <a href="{{ path('app_produit_index') }}" class="btn btn-primary">🛍️ Continue Shopping</a>
-                <a href="#" class="btn btn-success">💜 Checkout</a>
+<a href="{{ path('app_commande_checkout') }}" class="btn btn-success">💜 Checkout</a>
             </div>
         {% else %}
             <div class="alert alert-info">

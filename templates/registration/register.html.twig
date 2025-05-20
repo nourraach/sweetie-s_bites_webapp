@@ -1,172 +1,208 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Register{% endblock %}
-
 {% block stylesheets %}
-    {{ parent() }}
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
     <style>
-        .registration-container {
-            max-width: 500px;
-            margin: 40px auto;
-            padding: 30px;
-            background-color: #fff9fb;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.1);
-            border: 1px solid #ffe6f2;
-        }
+    :root {
+      --ivory: #F9F5F0;
+      --champagne: #F3E9DC;
+      --taupe: #8B7D6B;
+      --espresso: #4A3A2A;
+      --caramel: #C19A6B;
+      --gold: #D4AF37;
+      --rose-gold: #B76E79;
+      --shadow: 0 10px 30px rgba(75, 58, 42, 0.08);
+    }
 
-        h1 {
-            color: #9c27b0;
-            text-align: center;
-            margin-bottom: 30px;
-            font-weight: 600;
-            text-shadow: 1px 1px 2px rgba(156, 39, 176, 0.1);
-        }
+    body {
+      background-color: var(--ivory);
+      color: var(--espresso);
+      font-family: 'Cormorant Garamond', serif;
+      margin: 0;
+      padding: 0;
+      font-size: 18px;
+      line-height: 1.8;
+      font-weight: 400;
+    }
 
-        .alert-danger {
-            background-color: #fce4ec;
-            border-color: #f8bbd0;
-            color: #e91e63;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
+    .registration-container {
+      max-width: 540px;
+      margin: 4rem auto;
+      padding: 3rem 3rem 2.5rem;
+      background: linear-gradient(to bottom right, #fffefc, var(--champagne));
+      border-radius: 20px;
+      border: 1px solid #e4d9cd;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+    }
 
-        .form-group {
-            margin-bottom: 25px;
-        }
+    .registration-container:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 40px rgba(75, 58, 42, 0.1);
+    }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #9c27b0;
-            font-weight: 500;
-        }
+    h1 {
+      color: var(--espresso);
+      text-align: center;
+      margin-bottom: 2rem;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 2.2rem;
+      letter-spacing: 0.8px;
+    }
 
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #f8bbd0;
-            border-radius: 25px;
-            background-color: white;
-            transition: all 0.3s ease;
-            font-size: 16px;
-        }
+    .alert-danger {
+      background: #fbecec;
+      color: #842029;
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      border: 1px solid #f5c2c7;
+      font-size: 0.95rem;
+    }
 
-        input[type="email"]:focus,
-        input[type="password"]:focus {
-            border-color: #e91e63;
-            box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.2);
-            outline: none;
-        }
+    .form-group {
+      margin-bottom: 1.75rem;
+    }
 
-        .form-check {
-            margin: 25px 0;
-            display: flex;
-            align-items: center;
-        }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--espresso);
+      font-weight: 500;
+      font-size: 0.96rem;
+      font-family: 'Montserrat', sans-serif;
+      letter-spacing: 0.3px;
+    }
 
-        .form-check-input {
-            margin-right: 10px;
-            width: 20px;
-            height: 20px;
-            accent-color: #e91e63;
-        }
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: 1px solid #d8c4b1;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-family: 'Cormorant Garamond', serif;
+      background-color: #fdfaf7;
+      transition: all 0.3s ease;
+    }
 
-        .form-check-label {
-            color: #6a1b9a;
-        }
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      border-color: var(--rose-gold);
+      outline: none;
+      box-shadow: 0 0 0 5px rgba(183, 110, 121, 0.15);
+      background-color: #fffefc;
+    }
 
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #ff6ec4, #e91e63);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(233, 30, 99, 0.1);
-        }
+    .form-check {
+      margin: 2rem 0 1.5rem;
+      display: flex;
+      align-items: center;
+    }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(233, 30, 99, 0.2);
-            background: linear-gradient(135deg, #e91e63, #ff6ec4);
-        }
+    .form-check-input {
+      margin-right: 0.75rem;
+      width: 1.1rem;
+      height: 1.1rem;
+      accent-color: var(--caramel);
+      border-radius: 4px;
+    }
 
-        /* Form error styling */
-        .invalid-feedback {
-            color: #e91e63;
-            margin-top: 8px;
-            font-size: 14px;
-        }
+    .form-check-label {
+      font-size: 0.9rem;
+      color: var(--espresso);
+    }
 
-        .is-invalid {
-            border-color: #e91e63 !important;
-        }
+    .btn {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(to right, var(--rose-gold), var(--caramel));
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: 'Montserrat', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(183, 110, 121, 0.2);
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
 
-        /* Link styling */
-        a {
-            color: #e91e63;
-            text-decoration: none;
-            font-weight: 500;
-        }
+    .btn:hover {
+      background: linear-gradient(to right, var(--caramel), var(--gold));
+      transform: translateY(-2px);
+    }
 
-        a:hover {
-            text-decoration: underline;
-        }
+    .invalid-feedback {
+      color: #dc3545;
+      font-size: 0.85rem;
+      margin-top: 0.3rem;
+      display: block;
+    }
 
-        /* Responsive adjustments */
-        @media (max-width: 576px) {
-            .registration-container {
-                margin: 20px;
-                padding: 20px;
-            }
-            
-            h1 {
-                font-size: 24px;
-            }
-        }
+    .is-invalid {
+      border-color: #dc3545 !important;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 2.5rem;
+      color: #7c655c;
+      font-size: 0.9rem;
+    }
+
+    .login-link a {
+      color: var(--caramel);
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .login-link a:hover {
+      color: var(--espresso);
+      text-decoration: underline;
+    }
+
+    @media (max-width: 576px) {
+      .registration-container {
+        margin: 1.25rem;
+        padding: 2rem;
+      }
+    }
     </style>
 {% endblock %}
 
 {% block body %}
-    <div class="registration-container">
-        {% for flash_error in app.flashes('verify_email_error') %}
-            <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-        {% endfor %}
+<div class="registration-container">
+    {% for flash_error in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
 
-        <h1>Create Your Account 💜</h1>
+    <h1>Create Your Account</h1>
 
-        {{ form_start(registrationForm, { 'attr': {'class': 'form'} }) }}
-            <div class="form-group">
-                {{ form_label(registrationForm.email) }}
-                {{ form_widget(registrationForm.email, { 'attr': {'class': 'form-control'} }) }}
-                {{ form_errors(registrationForm.email) }}
-            </div>
+    {{ form_start(registrationForm) }}
+        <div class="form-group">
+            {{ form_label(registrationForm.email) }}
+            {{ form_widget(registrationForm.email) }}
+            {{ form_errors(registrationForm.email) }}
+        </div>
 
-            <div class="form-group">
-                {{ form_label(registrationForm.plainPassword) }}
-                {{ form_widget(registrationForm.plainPassword, { 'attr': {'class': 'form-control'} }) }}
-                {{ form_errors(registrationForm.plainPassword) }}
-            </div>
+        <div class="form-group">
+            {{ form_label(registrationForm.plainPassword) }}
+            {{ form_widget(registrationForm.plainPassword) }}
+            {{ form_errors(registrationForm.plainPassword) }}
+        </div>
 
-            <div class="form-check">
-                {{ form_widget(registrationForm.agreeTerms, { 'attr': {'class': 'form-check-input'} }) }}
-                {{ form_label(registrationForm.agreeTerms, null, { 'label_attr': {'class': 'form-check-label'} }) }}
-                {{ form_errors(registrationForm.agreeTerms) }}
-            </div>
+        <div class="form-check">
+            {{ form_widget(registrationForm.agreeTerms) }}
+            {{ form_label(registrationForm.agreeTerms) }}
+            {{ form_errors(registrationForm.agreeTerms) }}
+        </div>
 
-            <button type="submit" class="btn">Register Now</button>
-            
-            <p style="text-align: center; margin-top: 20px; color: #6a1b9a;">
-                Already have an account? <a href="{{ path('app_login') }}">Sign in</a>
-            </p>
-        {{ form_end(registrationForm) }}
-    </div>
+        <button type="submit" class="btn">Register Now</button>
+
+        <p class="login-link">
+            Already have an account? <a href="{{ path('app_login') }}">Sign in here</a>
+        </p>
+    {{ form_end(registrationForm) }}
+</div>
 {% endblock %}

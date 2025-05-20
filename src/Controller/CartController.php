@@ -9,6 +9,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Commande;
+use App\Entity\CommandeProduit;
+
 
 #[Route('/cart')]
 class CartController extends AbstractController
@@ -107,4 +111,5 @@ class CartController extends AbstractController
         
         return $this->redirectToRoute('app_cart_index');
     }
+    
 }

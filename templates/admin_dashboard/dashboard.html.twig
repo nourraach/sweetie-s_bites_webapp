@@ -1,9 +1,621 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Admin Dashboard{% endblock %}
-
 {% block body %}
-    <h1>Admin Dashboard</h1>
-    <p>Welcome, admin!</p>
-    {# Add your admin-specific content here #}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500;600&family=Fredoka:wght@700&display=swap');
+
+:root {
+  --primary: #a66a4c;
+  --primary-dark: #8a5638;
+  --primary-light: #c88462;
+  --secondary: #d9c2aa;
+  --accent: #c88462;
+  --text: #5c3d2e;
+  --text-light: #8a726a;
+  --background: #fff5e8;
+  --card-bg: #ffeede;
+  --highlight: #fff9f0;
+  --badge: #ffd166;
+  --gold: #d9b38c;
+  --caramel: #c88462;
+  --success: #a3b18a;
+  --danger: #e76f51;
+  --info: #457b9d;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--background);
+    color: var(--text);
+}
+
+.admin-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.admin-main {
+    flex: 1;
+    padding: 30px;
+    background-color: var(--background);
+    min-height: 100vh;
+    width: 100%;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--secondary);
+}
+
+.admin-title {
+    font-family: 'Playfair Display', serif;
+    color: var(--primary-dark);
+    font-size: 32px;
+    margin: 0;
+    text-shadow: 1px 1px 3px rgba(180, 139, 148, 0.1);
+    position: relative;
+    display: inline-block;
+}
+
+.admin-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(to right, var(--primary), var(--gold));
+}
+
+.admin-user {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(217, 194, 170, 0.2);
+    padding: 8px 15px;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+}
+
+.admin-user:hover {
+    background: rgba(217, 194, 170, 0.4);
+}
+
+.admin-user-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--secondary);
+    box-shadow: 0 3px 10px rgba(166, 106, 76, 0.15);
+    transition: all 0.3s ease;
+}
+
+.admin-user:hover .admin-user-avatar {
+    transform: rotate(10deg);
+    box-shadow: 0 5px 15px rgba(166, 106, 76, 0.25);
+}
+
+.admin-user-name {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.dashboard-card {
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(166, 106, 76, 0.08);
+    border: 1px solid var(--secondary);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(166, 106, 76, 0.15);
+}
+
+.dashboard-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--primary), var(--gold));
+    border-radius: 16px 0 0 16px;
+}
+
+.card-title {
+    font-size: 14px;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.card-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    color: var(--primary-dark);
+    margin-bottom: 15px;
+    line-height: 1;
+}
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: white;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 20px rgba(166, 106, 76, 0.2);
+    transition: all 0.3s ease;
+}
+
+.dashboard-card:hover .card-icon {
+    transform: scale(1.1) rotate(10deg);
+}
+
+.card-icon.users {
+    background: linear-gradient(135deg, var(--primary), var(--caramel));
+}
+
+.card-icon.products {
+    background: linear-gradient(135deg, #d9b38c, #a66a4c);
+}
+
+.card-icon.orders {
+    background: linear-gradient(135deg, var(--gold), var(--primary-dark));
+}
+
+.card-icon.sales {
+    background: linear-gradient(135deg, var(--badge), var(--caramel));
+}
+
+.dashboard-card a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+}
+
+.dashboard-card a::after {
+    content: '→';
+    transition: transform 0.3s ease;
+}
+
+.dashboard-card a:hover {
+    color: var(--primary-dark);
+}
+
+.dashboard-card a:hover::after {
+    transform: translateX(3px);
+}
+
+.data-table-container {
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(166, 106, 76, 0.08);
+    border: 1px solid var(--secondary);
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.data-table-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--primary), var(--gold));
+}
+
+.data-table-title {
+    font-family: 'Playfair Display', serif;
+    color: var(--primary-dark);
+    font-size: 24px;
+    margin-bottom: 25px;
+    position: relative;
+    padding-left: 15px;
+}
+
+.data-table-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 15px;
+    width: 50px;
+    height: 3px;
+    background: var(--gold);
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th {
+    text-align: left;
+    padding: 15px 20px;
+    background-color: var(--highlight);
+    color: var(--primary-dark);
+    font-weight: 600;
+    border-bottom: 2px solid var(--secondary);
+    font-family: 'Playfair Display', serif;
+    position: sticky;
+    top: 0;
+}
+
+.data-table td {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--secondary);
+    color: var(--text-light);
+    transition: all 0.2s ease;
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table tr:hover td {
+    background-color: var(--highlight);
+    color: var(--primary-dark);
+}
+
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+}
+
+.status-pending {
+    background-color: rgba(255, 209, 102, 0.2);
+    color: #b38b00;
+}
+
+.status-completed {
+    background-color: rgba(163, 177, 138, 0.2);
+    color: #588157;
+}
+
+.status-cancelled {
+    background-color: rgba(231, 111, 81, 0.2);
+    color: #bc4749;
+}
+
+.table-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    font-family: 'Montserrat', sans-serif;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.btn i {
+    font-size: 14px;
+}
+
+.btn-view {
+    background-color: var(--secondary);
+    color: var(--text);
+}
+
+.btn-view:hover {
+    background-color: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(166, 106, 76, 0.2);
+}
+
+.btn-edit {
+    background-color: var(--gold);
+    color: var(--text);
+}
+
+.btn-edit:hover {
+    background-color: var(--primary-dark);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(166, 106, 76, 0.2);
+}
+
+.btn-delete {
+    background-color: rgba(231, 111, 81, 0.2);
+    color: var(--danger);
+}
+
+.btn-delete:hover {
+    background-color: var(--danger);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(231, 111, 81, 0.2);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-light);
+}
+
+.empty-state i {
+    font-size: 50px;
+    margin-bottom: 20px;
+    color: var(--secondary);
+}
+
+.empty-state h3 {
+    font-family: 'Playfair Display', serif;
+    color: var(--primary-dark);
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: var(--text-light);
+}
+
+@media (max-width: 768px) {
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+    
+    .table-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .data-table th, 
+    .data-table td {
+        padding: 12px 15px;
+    }
+
+    .data-table-container {
+        padding: 20px;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.dashboard-card, 
+.data-table-container {
+    animation: fadeIn 0.5s ease forwards;
+}
+.dashboard-card:nth-child(1) { animation-delay: 0.1s; }
+.dashboard-card:nth-child(2) { animation-delay: 0.2s; }
+.dashboard-card:nth-child(3) { animation-delay: 0.3s; }
+.dashboard-card:nth-child(4) { animation-delay: 0.4s; }
+.data-table-container:nth-child(1) { animation-delay: 0.2s; }
+.data-table-container:nth-child(2) { animation-delay: 0.3s; }
+
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.data-table {
+    min-width: 600px;
+}
+</style>
+<div class="admin-container">
+    <div class="admin-main">
+        <header class="admin-header">
+            <h1 class="admin-title">Dashboard Overview</h1>
+            <div class="admin-user">
+                <span class="admin-user-name">Admin</span>
+                <img src="{{ asset('images/logo.png') }}" alt="Admin" class="admin-user-avatar">
+            </div>
+        </header>
+
+        <div class="dashboard-cards">
+            <div class="dashboard-card">
+                <div class="card-icon users">
+                    👥
+                </div>
+                <div class="card-title">Total Users</div>
+                <div class="card-value">{{ user_count }}</div>
+                <a href="{{ path('app_main') }}">View All</a>
+            </div>
+            
+            <div class="dashboard-card">
+                <div class="card-icon products">
+                    🍪
+                </div>
+                <div class="card-title">Products</div>
+                <div class="card-value">{{ product_count }}</div>
+                <a href="{{ path('app_produit_index') }}">View All</a>
+            </div>
+            
+            <div class="dashboard-card">
+                <div class="card-icon orders">
+                    📦
+                </div>
+                <div class="card-title">Total Orders</div>
+                <div class="card-value">{{ order_count }}</div>
+                <a href="{{ path('app_commande_index') }}">View All</a>
+            </div>
+            
+            <div class="dashboard-card">
+                <div class="card-icon sales">
+                    💰
+                </div>
+                <div class="card-title">Total Sales</div>
+                <div class="card-value">{{ total_sales }}dt</div>
+                <a href="{{ path('app_commande_index') }}">View Report</a>
+            </div>
+        </div>
+        <div class="data-table-container">
+            <h3 class="data-table-title">Recent Orders</h3>
+            {% if recent_orders|length > 0 %}
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Order #</th>
+                            <th>Date</th>
+                            <th>Products</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for commande in recent_orders %}
+                        <tr>
+                            <td>{{ commande.numCommande }}</td>
+                            <td>{{ commande.date|date('Y-m-d') }}</td>
+                            <td>
+                                {% for produit in commande.produits %}
+                                    {{ produit.nom }}{% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% set total = 0 %}
+                                {% for produit in commande.produits %}
+                                    {% set total = total + produit.prix %}
+                                {% endfor %}
+                                {{ total }}dt
+                            </td>
+                            <td>
+                                <span class="status-badge status-completed">Completed</span>
+                            </td>
+                            <td>
+                                <div class="table-actions">
+                                    <a href="{{ path('app_commande_show', {'id': commande.id}) }}" class="btn btn-view">
+                                        <i>👁️</i> View
+                                    </a>
+                                    <a href="{{ path('app_commande_edit', {'id': commande.id}) }}" class="btn btn-edit">
+                                        <i>✏️</i> Edit
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i>📦</i>
+                <h3>No Recent Orders</h3>
+                <p>There are no orders to display at this time.</p>
+            </div>
+            {% endif %}
+        </div>
+        <div class="data-table-container">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 class="data-table-title">Popular Products</h3>
+                <a href="{{ path('app_produit_new') }}" class="btn btn-primary" style="background-color: var(--primary); color: white;">
+                    Add New Product
+                </a>
+            </div>
+            {% if popular_products|length > 0 %}
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Orders</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for produit in popular_products %}
+                        <tr>
+                            <td>
+                                <strong>{{ produit.nomProduit }}</strong>
+                                {% if produit.categorie %}
+                                <div class="text-muted">{{ produit.categorie }}</div>
+                                {% endif %}
+                            </td>
+                            <td>{{ produit.prix }}dt</td>
+                            <td>{{ random(10, 50) }}</td>
+                            <td>
+                                <div class="table-actions">
+                                    <a href="{{ path('app_produit_show', {'id': produit.id}) }}" class="btn btn-view">
+                                        <i>👁️</i> View
+                                    </a>
+                                    <a href="{{ path('app_produit_edit', {'id': produit.id}) }}" class="btn btn-edit">
+                                        <i>✏️</i> Edit
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i>🍪</i>
+                <h3>No Popular Products</h3>
+                <p>There are no products to display at this time.</p>
+                <a href="{{ path('app_produit_new') }}" class="btn btn-primary" style="margin-top: 20px; background-color: var(--primary); color: white;">
+                    Add New Product
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}

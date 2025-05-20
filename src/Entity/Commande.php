@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Entity;
+use App\Repository\ProduitRepository;
 
 use App\Repository\CommandeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -14,6 +15,8 @@ class Commande
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+    #[ORM\OneToMany(targetEntity: CommandeProduit::class, mappedBy: 'commande', orphanRemoval: true)]
+private Collection $commandeProduits;
 
     #[ORM\Column(length: 255)]
     private ?string $numCommande = null;
@@ -24,6 +27,7 @@ class Commande
     public function __construct()
     {
         $this->produits = new ArrayCollection();
+         $this->commandeProduits = new ArrayCollection();
     }
 
     // getters/setters ici
@@ -80,13 +84,30 @@ class Commande
         return $this->produits;
     }
 
-    public function addProduit(Produit $produit): self
-    {
-        if (!$this->produits->contains($produit)) {
-            $this->produits->add($produit);
-            $produit->setCommande($this);
-        }
-
-        return $this;
+public function addProduit(Produit $produit): self
+{
+    if (!$this->produits->contains($produit)) {
+        $this->produits[] = $produit;
     }
+    return $this;
+}
+public function addCommandeProduit(CommandeProduit $commandeProduit): self
+{
+    if (!$this->commandeProduits->contains($commandeProduit)) {
+        $this->commandeProduits->add($commandeProduit);
+        $commandeProduit->setCommande($this);
+    }
+    return $this;
+}
+
+public function removeCommandeProduit(CommandeProduit $commandeProduit): self
+{
+    if ($this->commandeProduits->removeElement($commandeProduit)) {
+        if ($commandeProduit->getCommande() === $this) {
+            $commandeProduit->setCommande(null);
+        }
+    }
+    return $this;
+}
+
 }

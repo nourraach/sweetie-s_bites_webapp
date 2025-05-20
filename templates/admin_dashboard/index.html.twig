@@ -1,20 +1,419 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AdminDashboardController!{% endblock %}
+{% block title %}Product List{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        :root {
+          --primary: #a66a4c; /* Warm terracotta */
+          --primary-dark: #8a5638; /* Deepened terracotta */
+          --secondary: #d9c2aa; /* Warm beige */
+          --accent: #c88462; /* Lighter terracotta */
+          --text: #5c3d2e; /* Rich brown */
+          --text-light: #8a726a; /* Soft brown */
+          --background: #fff5e8; /* Warm ivory */
+          --card-bg: #fff9f0; /* Lighter card background */
+          --highlight: #fff9f0; /* Warm off-white */
+          --badge: #ffd166; /* Golden yellow */
+          --gold: #d9b38c; /* Warm gold */
+          --caramel: #c88462; /* Caramel accent */
+        }
+        
+        html, body {
+            background-color: var(--background) !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        body {
+            font-family: 'Playfair Display', serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .product-container {
+            max-width: 1400px;
+            margin: 50px auto;
+            padding: 40px;
+            background-color: transparent;
+            position: relative;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .product-header h1 {
+            font-size: 2.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--primary-dark);
+            position: relative;
+            margin: 0;
+        }
+
+        .product-header h1::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -12px;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--gold));
+            border-radius: 2px;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary), var(--caramel));
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, var(--primary-dark), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(166, 106, 76, 0.3);
+        }
+
+        .search-container {
+            flex: 1;
+            min-width: 300px;
+            max-width: 600px;
+            margin-left: 20px;
+        }
+
+        .search-form {
+            display: flex;
+            width: 100%;
+            position: relative;
+            background: transparent;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 16px 24px;
+            font-size: 1rem;
+            border-radius: 30px;
+            color: var(--text);
+            box-shadow: none;
+            border: 2px solid var(--secondary);
+            background-color: white;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(166, 106, 76, 0.15);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-light);
+            opacity: 0.7;
+        }
+
+        .search-button {
+            padding: 14px 32px;
+            font-size: 0.9rem;
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            border-radius: 30px;
+            border: none;
+            background: linear-gradient(to right, var(--primary), var(--caramel));
+            color: white;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-button:hover {
+            background: linear-gradient(to right, var(--primary-dark), var(--primary));
+            transform: translateY(-1px);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(139, 125, 107, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            border: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
+            z-index: -1;
+            border-radius: 16px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(139, 125, 107, 0.2);
+        }
+
+        .product-card:hover::before {
+            opacity: 1;
+        }
+
+        .product-image-container {
+            width: 100%;
+            height: 240px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.08);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--badge);
+            color: var(--text);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .product-info {
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+
+        .product-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text);
+            font-family: 'Playfair Display', serif;
+            position: relative;
+            display: inline-block;
+        }
+
+        .product-title::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -8px;
+            width: 40px;
+            height: 2px;
+            background: var(--gold);
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
+        }
+
+        .product-card:hover .product-title::after {
+            width: 80px;
+        }
+
+        .product-price {
+            font-size: 1.3rem;
+            color: var(--primary);
+            font-family: 'Montserrat', sans-serif;
+            margin-bottom: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .product-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .product-actions a {
+            padding: 10px 22px;
+            font-size: 0.85rem;
+            border-radius: 20px;
+            font-family: 'Montserrat', sans-serif;
+            text-decoration: none;
+            color: white;
+            background: linear-gradient(to right, var(--primary), var(--caramel));
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .product-actions a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, var(--primary-dark), var(--primary));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .product-actions a:hover::before {
+            opacity: 1;
+        }
+
+        .product-actions a:first-child {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .product-actions a:first-child::before {
+            background: rgba(166, 106, 76, 0.1);
+        }
+
+        .product-actions a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(166, 106, 76, 0.25);
+        }
+
+        .no-products {
+            text-align: center;
+            color: var(--text-light);
+            grid-column: 1 / -1;
+            padding: 60px 20px;
+        }
+
+        .no-products p {
+            font-size: 1.25rem;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 20px;
+        }
+
+        .coffee-bean-decoration {
+            position: absolute;
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        .bean-1 {
+            top: 60px;
+            right: 50px;
+            transform: rotate(25deg);
+            width: 100px;
+        }
+
+        .bean-2 {
+            bottom: 40px;
+            left: 40px;
+            transform: rotate(-10deg);
+            width: 90px;
+        }
+
+        @media (max-width: 768px) {
+            .product-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 20px;
+            }
+
+            .search-form {
+                width: 100%;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            }
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="product-container">
+        <img src="{{ asset('images/coffee-bean.png') }}" class="coffee-bean-decoration bean-1" alt="Decorative coffee bean">
+        <img src="{{ asset('images/coffee-bean.png') }}" class="coffee-bean-decoration bean-2" alt="Decorative coffee bean">
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+        <div class="product-header">
+            <h1>Our Products</h1>
+            <div class="search-container">
+                <form action="{{ path('app_produit_index') }}" method="get" class="search-form">
+                    <input type="text" name="q" class="search-input" placeholder="Search delicacies..." value="{{ app.request.query.get('q') }}">
+                    <button type="submit" class="search-button">Search</button>
+                </form>
+            </div>
+        </div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/SymfonyProjects/projet2 - Copy (2)/src/Controller/AdminDashboardController.php</code></li>
-        <li>Your template at <code>C:/SymfonyProjects/projet2 - Copy (2)/templates/admin_dashboard/index.html.twig</code></li>
-    </ul>
-</div>
+        <div class="product-grid">
+            {% for produit in produits %}
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="{{ produit.imageName ? vich_uploader_asset(produit, 'imageFile') : asset('uploads/products/c1.png') }}" 
+                             alt="{{ produit.nomProduit }}" 
+                             class="product-image">
+                        <div class="product-badge">Popular</div>
+                    </div>
+
+                    <div class="product-info">
+                        <h3 class="product-title">{{ produit.nomProduit }}</h3>
+                        <div class="product-price">{{ produit.prix|number_format(2, '.', ',') }} dt</div>
+
+                        <div class="product-actions">
+                            <a href="{{ path('app_produit_show', {'id': produit.id}) }}">Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="no-products">
+                    <p>No products found</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+use App\Repository\ProduitRepository;
 
 use App\Entity\Commande;
 use App\Form\CommandeType;
@@ -77,4 +78,43 @@ final class CommandeController extends AbstractController{
 
         return $this->redirectToRoute('app_commande_index', [], Response::HTTP_SEE_OTHER);
     }
+    #[Route('/checkout', name: 'app_commande_checkout', methods: ['GET', 'POST'])]
+public function checkout(Request $request, EntityManagerInterface $em, ProduitRepository $produitRepository): Response
+{
+    // 1. Récupérer le panier stocké en session (exemple)
+    $session = $request->getSession();
+    $panier = $session->get('panier', []); // tableau [produitId => quantité]
+
+    if (empty($panier)) {
+        $this->addFlash('warning', 'Votre panier est vide.');
+        return $this->redirectToRoute('app_produit_index');
+    }
+
+    // 2. Créer une nouvelle commande
+    $commande = new Commande();
+
+    // 3. Ajouter les produits à la commande
+    foreach ($panier as $produitId => $quantite) {
+        $produit = $produitRepository->find($produitId);
+        if (!$produit) {
+            continue;
+        }
+        for ($i = 0; $i < $quantite; $i++) {
+            $commande->addProduit($produit);
+        }
+    }
+
+    // 4. Sauvegarder la commande
+    $em->persist($commande);
+    $em->flush();
+
+    // 5. Vider le panier
+    $session->remove('panier');
+
+    $this->addFlash('success', 'Commande passée avec succès !');
+
+    return $this->redirectToRoute('app_commande_show', ['id' => $commande->getId()]);
+}
+
+
 }

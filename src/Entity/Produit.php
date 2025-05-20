@@ -1,11 +1,14 @@
 <?php
 
 namespace App\Entity;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 use App\Repository\ProduitRepository;
-use Doctrine\ORM\Mapping as ORM;
+
 
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
@@ -13,6 +16,8 @@ use Doctrine\ORM\Mapping as ORM;
 class Produit {
     #[ORM\Id, ORM\GeneratedValue, ORM\Column(type: 'integer')]
     private ?int $id = null;
+    #[ORM\OneToMany(targetEntity: CommandeProduit::class, mappedBy: 'produit')]
+private Collection $commandeProduits;
 
     #[ORM\Column]
     private string $nomProduit;
@@ -24,9 +29,6 @@ class Produit {
 
     #[ORM\ManyToOne(targetEntity: Categorie::class, inversedBy: 'produits')]
     private Categorie $categorie;
-
-    #[ORM\ManyToOne(targetEntity: Commande::class, inversedBy: 'produits')]
-    private ?Commande $commande= null;
     #[Vich\UploadableField(mapping: 'product_image', fileNameProperty: 'imageName')]
     private ?File $imageFile = null;
 
@@ -35,6 +37,10 @@ class Produit {
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
+    public function __construct()
+{
+    $this->commandeProduits = new ArrayCollection();
+}
 
     /**
      * Get the value of id
@@ -164,23 +170,6 @@ class Produit {
 public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
 {
     $this->updatedAt = $updatedAt;
-    return $this;
-}
-public function getCommande():? Commande
-{
-    return $this->commande;
-}
-
-/**
- * Set the value of commande
- *
- * @param Commande $commande
- *
- * @return self
- */
-public function setCommande(?Commande $commande): self
-{
-    $this->commande = $commande;
     return $this;
 }
 }

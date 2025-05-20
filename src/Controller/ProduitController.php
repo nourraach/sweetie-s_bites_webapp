@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/produit')]
+#[Route('/produits')]
 final class ProduitController extends AbstractController{
     #[Route(name: 'app_produit_index', methods: ['GET'])]
     public function index(Request $request, ProduitRepository $produitRepository): Response
